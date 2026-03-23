@@ -2,6 +2,13 @@
 //  knockout.js — Knockout bracket rendering & updates
 // ═══════════════════════════════════════════
 
+function getWinner(t1, t2, s1, s2) {
+  if (s1 == null || s2 == null) return null;
+  if (s1 === s2) return null; // 🔥 critical fix
+
+  return s1 > s2 ? t1 : t2;
+}
+
 function getS8Qualified() {
   return [0, 1].map(groupIdx => {
     const stats = computeStandings(groupIdx);
@@ -27,26 +34,43 @@ function renderKnockout() {
       };
     }
   // Auto-derive semi matchups
-  const sf1 = { t1: q[0].winner, t2: q[1].runner,  s1: knockoutData.sf1.s1, s2: knockoutData.sf1.s2 };
-  const sf2 = { t1: q[1].winner, t2: q[0].runner,  s1: knockoutData.sf2.s1, s2: knockoutData.sf2.s2 };
+  const sf1 = { 
+    t1: q[0]?.winner || 'TBD', 
+    t2: q[1]?.runner || 'TBD',
+    s1: knockoutData.sf1.s1, 
+    s2: knockoutData.sf1.s2 
+  };
 
-  const finT1 = (sf1.s1 !== null && sf1.s2 !== null)
-    ? (sf1.s1 > sf1.s2 ? sf1.t1 : sf1.t2) : 'SF1 Winner';
-  const finT2 = (sf2.s1 !== null && sf2.s2 !== null)
-    ? (sf2.s1 > sf2.s2 ? sf2.t1 : sf2.t2) : 'SF2 Winner';
-  const fin = { t1: finT1, t2: finT2, s1: knockoutData.final.s1, s2: knockoutData.final.s2 };
+  const sf2 = { 
+    t1: q[1]?.winner || 'TBD', 
+    t2: q[0]?.runner || 'TBD',
+    s1: knockoutData.sf2.s1, 
+    s2: knockoutData.sf2.s2 
+  };
 
-  const champion = (fin.s1 !== null && fin.s2 !== null)
-    ? (fin.s1 > fin.s2 ? fin.t1 : fin.t2) : null;
+  const sf1Winner = getWinner(sf1.t1, sf1.t2, sf1.s1, sf1.s2);
+  const sf2Winner = getWinner(sf2.t1, sf2.t2, sf2.s1, sf2.s2);
+
+  const finT1 = sf1Winner || 'SF1 Winner';
+  const finT2 = sf2Winner || 'SF2 Winner';
+
+  const fin = {
+    t1: finT1,
+    t2: finT2,
+    s1: knockoutData.final.s1,
+    s2: knockoutData.final.s2
+  };
+
+  const champion = getWinner(fin.t1, fin.t2, fin.s1, fin.s2);
 
   const scoreCell = (s) => s !== null ? `<span class="team-score">${s}</span>` : '';
 
   const matchCard = (match, id) => `
     <div class="match-card ${id === 'final' ? 'final-card' : ''}">
-      <div class="match-team ${match.t1.includes('Winner') || match.t1 === 'TBD' ? 'tbd' : ''}">
+      <div class="match-team ${(match.t1 || '').includes('Winner') || match.t1 === 'TBD' ? 'tbd' : ''}">
         <span>${match.t1}</span>
         ${scoreCell(match.s1)}
-        ${isHost && !match.t1.includes('Winner') && match.t1 !== 'TBD'
+        ${isHost && !(match.t1 || '').includes('Winner') && match.t1 !== 'TBD'
           ? `<input class="score-input" type="number" min="0" placeholder="0" value="${match.s1 ?? ''}"
                onchange="updateKO('${id}','s1',this.value)" style="margin-left:8px;width:36px">`
           : ''}
