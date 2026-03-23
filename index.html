@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UFC – Ultimate Foosball Championship</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+<!-- ── BACKGROUND ── -->
+<div class="bg-canvas"></div>
+<div id="particles"></div>
+
+<div id="app">
+
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header>
+    <div class="logo-badge">⚽ UFC ⚽</div>
+    <h1>Ultimate Foosball<br>Championship</h1>
+    <div class="subtitle">Office League · 2025 Season</div>
+
+    <!-- NCompass branding -->
+    <div class="organiser-bar" style="margin-top:14px">
+      <img src="assets/ncompass-logo.png" alt="NCompass Tech Studio" class="organiser-logo">
+    </div>
+  </header>
+
+  <!-- ══════════════ AUTH BAR ══════════════ -->
+  <div class="auth-bar">
+    <span class="mode-badge" id="modeBadge">👁 SPECTATOR MODE</span>
+    <button class="btn btn-gold"  id="hostLoginBtn"  onclick="openLogin()">🔑 Host Login</button>
+    <button class="btn btn-red"   id="hostLogoutBtn" onclick="logout()" style="display:none">🚪 Logout</button>
+  </div>
+
+  <!-- ══════════════ TABS ══════════════ -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('groupStage')">⚔ Group Stage</button>
+    <button class="tab-btn"        onclick="showTab('super8')">🔥 Super 8</button>
+    <button class="tab-btn"        onclick="showTab('knockout')">🏆 Knockout</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       GROUP STAGE
+  ══════════════════════════════════════════════ -->
+  <div id="groupStage" class="section active">
+    <div class="section-header">
+      <div class="section-title">⚔ Group Stage</div>
+      <div class="section-sub">20 Teams · 4 Groups · Top 2 Qualify</div>
+      <button class="btn btn-red host-only" onclick="freezeGroupStage()" style="display:none">
+        🔒 Freeze Group Stage
+        </button>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--green)"></div>
+        Qualify to Super 8 (Top 2)
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(255,255,255,0.2)"></div>
+        Eliminated
+      </div>
+    </div>
+
+    <!-- Shown only in Host mode -->
+    <div class="info-box" id="hostEditHint" style="display:none">
+      <strong>🔧 Host Mode Active</strong> — All <strong>W, D, L and PTS</strong> fields are now
+      editable inputs. Click any cell to update. Changes save automatically and rankings update instantly.
+    </div>
+
+    <div class="groups-grid" id="groupsGrid"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SUPER 8
+  ══════════════════════════════════════════════ -->
+  <div id="super8" class="section">
+    <div class="section-header">
+      <div class="section-title">🔥 Super 8</div>
+      <div class="section-sub">8 Qualified Teams · 2 Groups · Top 2 from each → Semis</div>
+      <button class="btn btn-red host-only" onclick="freezeSuper8()" style="display:none">
+        🔒 Freeze Super 8
+        </button>
+    </div>
+
+    <div class="info-box">
+      <strong>🏅 Qualification:</strong> Top 2 from each group stage group advance to Super 8.<br>
+      <strong>📋 Format:</strong> 8 teams split into 2 groups of 4. Each team plays the other 3 in
+      their group. Top 2 from each group advance to Semifinals.
+    </div>
+
+    <div class="super8-grid" id="super8Grid"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       KNOCKOUT
+  ══════════════════════════════════════════════ -->
+  <div id="knockout" class="section">
+    <div class="section-header">
+      <div class="section-title">🏆 Knockout Stage</div>
+      <div class="section-sub">Semifinals → Final → Champion</div>
+    </div>
+
+    <div class="info-box">
+      <strong>SF1:</strong> Super 8 Group A Winner vs Super 8 Group B Runner-up &nbsp;|&nbsp;
+      <strong>SF2:</strong> Super 8 Group B Winner vs Super 8 Group A Runner-up
+    </div>
+
+    <div class="bracket-container" id="bracketContainer"></div>
+
+    <div class="champion-section" id="championSection" style="display:none">
+      <div class="trophy">🏆</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:4px;
+                  color:var(--muted);text-transform:uppercase;margin:10px 0 4px">Champion</div>
+      <div class="champion-name" id="championName">TBD</div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- ══════════════ LOGIN MODAL ══════════════ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <div class="modal-title">🔑 HOST LOGIN</div>
+    <div class="modal-sub">Enter your credentials to manage the tournament</div>
+
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" type="text" id="loginUser" placeholder="host" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="loginPass" placeholder="••••••••"
+             onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <div class="error-msg" id="loginError">Invalid credentials. Try again.</div>
+
+    <button class="btn btn-gold" style="width:100%;padding:14px;font-size:15px" onclick="doLogin()">
+      LOGIN AS HOST
+    </button>
+    <div style="text-align:center;margin-top:16px">
+      <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;letter-spacing:1px"
+              onclick="closeLogin()">
+        Cancel — Enter as Spectator
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════ SCRIPTS ══════════════ -->
+<!-- Load order matters: data → ui helpers → renderers → app boot -->
+<script type="module" src="scripts/supabase.js"></script>
+<script src="scripts/data.js"></script>
+<script src="scripts/ui.js"></script>
+<script src="scripts/auth.js"></script>
+<script src="scripts/groupStage.js"></script>
+<script src="scripts/super8.js"></script>
+<script src="scripts/knockout.js"></script>
+<script src="scripts/app.js"></script>
+
+</body>
+</html>
