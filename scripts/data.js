@@ -2,8 +2,8 @@
 //  data.js — Supabase-powered data layer
 // ═══════════════════════════════════════════
 
-const HOST_USER = 'host';
-const HOST_PASS = 'ufc2025';
+const HOST_USER = 'host@ncompass';
+const HOST_PASS = 'foosball@nc@2026';
 
 let tournamentState = {
   group_locked: false,
