@@ -79,6 +79,7 @@ async function updateGroupField(groupIdx, teamIdx, field, val) {
   team.pts = (team.w * 2);
 
   await updateGroup(team);
+  await loadAllData();
 
   console.log("CALLING AUTO FILL");   // 🔥 DEBUG
 
