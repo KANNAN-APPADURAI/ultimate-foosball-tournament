@@ -11,12 +11,38 @@ function getWinner(t1, t2, s1, s2) {
 
 function getS8Qualified() {
   return [0, 1].map(groupIdx => {
+
+    const matchesPlayed = getMatchesPlayed(groupIdx);
     const stats = computeStandings(groupIdx);
 
     const rows = Object.keys(stats)
       .map(name => ({ name, ...stats[name] }))
       .sort((a, b) => b.pts - a.pts || (b.nrr || 0) - (a.nrr || 0));
 
+     // 🔒 LOCKED → always show final result
+    if (tournamentState.super8_locked) {
+      return {
+        winner: rows[0]?.name || 'TBD',
+        runner: rows[1]?.name || 'TBD'
+      };
+    }
+
+    // 🔥 LOGIC CONTROL
+    if (matchesPlayed < 2) {
+      return {
+        winner: 'TBD',
+        runner: 'TBD'
+      };
+    }
+
+    if (matchesPlayed === 2) {
+      return {
+        winner: rows[0]?.name ? rows[0].name + ' (Probable)' : 'TBD',
+        runner: rows[1]?.name ? rows[1].name + ' (Probable)' : 'TBD'
+      };
+    }
+
+    // matchesPlayed >= 3 → confirmed
     return {
       winner: rows[0]?.name || 'TBD',
       runner: rows[1]?.name || 'TBD'

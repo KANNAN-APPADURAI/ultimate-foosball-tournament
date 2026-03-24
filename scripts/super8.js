@@ -248,3 +248,9 @@ async function fillS8Matches() {
 
   console.log("✅ Super 8 persisted to DB");
 }
+
+function getMatchesPlayed(groupIdx) {
+  return s8Matches[groupIdx].filter(m => 
+    m.s1 != null && m.s2 != null
+  ).length;
+}
