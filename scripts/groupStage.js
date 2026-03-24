@@ -29,7 +29,7 @@ function renderGroupStage() {
       const lCell   = isHost && !tournamentState.group_locked
         ? `<input class="score-input" type="number" min="0" value="${team.l}" onchange="updateGroupField(${gi},${team.origIdx},'l',this.value)">`
         : team.l;
-      const pts = (team.w * 2) - (team.l * 2);
+      const pts = (team.w * 2);
       const ptsCell = `<span class="pts-val">${pts}</span>`;
       const nrrCell = isHost  && !tournamentState.group_locked
         ? `<input class="score-input" type="number" value="${team.nrr || 0}" onchange="updateGroupField(${gi},${team.origIdx},'nrr',this.value)">`
