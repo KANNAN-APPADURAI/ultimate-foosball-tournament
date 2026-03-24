@@ -76,7 +76,7 @@ async function updateGroupField(groupIdx, teamIdx, field, val) {
   team[field] = parseInt(val) || 0;
 
   // auto points
-  team.pts = (team.w * 2) - (team.l * 2);
+  team.pts = (team.w * 2);
 
   await updateGroup(team);
 
