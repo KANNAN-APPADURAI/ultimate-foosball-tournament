@@ -92,3 +92,26 @@ async function updateGroupField(groupIdx, teamIdx, field, val) {
 
   showToast(`Saved ${field.toUpperCase()} ✅`);
 }
+
+function getQualificationStatus(team) {
+  const played = team.w + team.l;
+  const wins = team.w;
+
+  // ≤ 2 matches → TBD
+  if (played <= 2) return 'TBD';
+
+  // 3 matches
+  if (played === 3) {
+    if (wins === 3) return 'CONFIRMED';
+    if (wins === 2) return 'PROBABLE';
+    return 'TBD';
+  }
+
+  // 4 matches
+  if (played === 4) {
+    if (wins >= 3) return 'CONFIRMED';
+    return 'PROBABLE';
+  }
+
+  return 'TBD';
+}

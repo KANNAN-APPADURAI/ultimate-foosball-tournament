@@ -167,10 +167,39 @@ async function updateS8Teams() {
 
   // Get top 2 from each group
   const qualified = groupData.map(group => {
-    return [...group.teams]
-      .sort((a, b) => b.pts - a.pts || (b.nrr || 0) - (a.nrr || 0))
-      .slice(0, 2);
+  const sorted = [...group.teams]
+    .sort((a, b) => b.pts - a.pts || (b.nrr || 0) - (a.nrr || 0));
+
+  return sorted.slice(0, 2).map(team => {
+    const played = team.w + team.l;
+    const wins = team.w;
+
+    // 🔒 LOCK → always real names
+    if (tournamentState.group_locked) {
+      return team.name;
+    }
+
+    // 🔓 NOT LOCKED → apply your rules
+
+    // ≤2 matches → TBD
+    if (played <= 2) return 'TBD';
+
+    // 3 matches
+    if (played === 3) {
+      if (wins === 3) return team.name; // confirmed
+      if (wins === 2) return `${team.name} (Probable)`;
+      return 'TBD';
+    }
+
+    // 4 matches
+    if (played === 4) {
+      if (wins >= 3) return team.name; // confirmed
+      return `${team.name} (Probable)`;
+    }
+
+    return 'TBD';
   });
+});
 
   const g1 = qualified[0];
   const g2 = qualified[1];
@@ -182,19 +211,19 @@ async function updateS8Teams() {
     {
       name: 'Super 8 Group A',
       teams: [
-        g1[0]?.name,
-        g2[1]?.name,
-        g3[0]?.name,
-        g4[1]?.name
+        g1[0],
+        g2[1],
+        g3[0],
+        g4[1]
       ]
     },
     {
       name: 'Super 8 Group B',
       teams: [
-        g2[0]?.name,
-        g1[1]?.name,
-        g4[0]?.name,
-        g3[1]?.name
+        g2[0],
+        g1[1],
+        g4[0],
+        g3[1]
       ]
     }
   ];
