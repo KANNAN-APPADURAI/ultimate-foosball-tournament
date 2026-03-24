@@ -104,14 +104,12 @@ function computeStandings(groupIdx) {
       stats[m.t2].l++;
 
       stats[m.t1].pts += 2;
-      stats[m.t2].pts -= 2;
 
     } else if (m.s1 < m.s2) {
       stats[m.t2].w++; 
       stats[m.t1].l++;
 
       stats[m.t2].pts += 2;
-      stats[m.t1].pts -= 2;
     }
     
   });
