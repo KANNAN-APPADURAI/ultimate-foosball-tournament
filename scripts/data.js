@@ -17,7 +17,7 @@ const GROUPS_DEFAULT = [
     name: 'Group 1',
     teams: [
       { name: 'Naga & Shivang', w:0, l:0, pts:0, nrr:0 },
-      { name: 'Rahul Kaddi & Shaik', w:0, l:0, pts:0, nrr:0 },
+      { name: 'Rahul Kaddi & Shaik', w:0, l:0,  pts:0, nrr:0 },
       { name: 'Thiyanesh & Uday', w:0, l:0, pts:0, nrr:0 },
       { name: 'Dhanush & Afzal', w:0, l:0, pts:0, nrr:0 },
       { name: 'Riya & Tharun', w:0, l:0, pts:0, nrr:0 },
@@ -177,7 +177,7 @@ function mapGroups(rows) {
       name: r.team_name,
       w: r.wins,
       l: r.losses,
-      pts: (r.wins * 2) - (r.losses * 2),
+      pts: (r.wins * 2),
       nrr: r.nrr || 0
     });
   });
