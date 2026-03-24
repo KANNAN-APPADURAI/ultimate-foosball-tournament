@@ -175,6 +175,7 @@ function mapGroups(rows) {
 
     grouped[r.group_name].teams.push({
       name: r.team_name,
+      p: (r.wins + r.losses),  
       w: r.wins,
       l: r.losses,
       pts: (r.wins * 2),
@@ -182,5 +183,8 @@ function mapGroups(rows) {
     });
   });
 
-  return Object.values(grouped);
+  return Object.values(grouped).sort((a, b) => {
+  const getNum = g => parseInt(g.name.split(' ')[1]);
+  return getNum(a) - getNum(b);
+});
 }

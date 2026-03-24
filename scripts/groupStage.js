@@ -42,6 +42,7 @@ function renderGroupStage() {
               ${indicator}${rankBadge}<span class="team-name">${team.name}</span>
             </div>
           </td>
+          <td>${team.p}</td>
           <td>${wCell}</td>
           <td>${lCell}</td>
           <td>${ptsCell}</td>
@@ -59,7 +60,7 @@ function renderGroupStage() {
       </div>
       <table class="points-table">
         <thead>
-          <tr><th>Team</th><th>W</th><th>L</th><th>PTS</th><th>NRR</th></tr>
+          <tr><th>Team</th><th>P</th><th>W</th><th>L</th><th>PTS</th><th>NRR</th></tr>
         </thead>
         <tbody>${rowsHtml}</tbody>
       </table>`;
