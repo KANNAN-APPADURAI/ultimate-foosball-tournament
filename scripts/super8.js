@@ -23,7 +23,7 @@ function renderSuper8() {
           <span>${m.t1 || 'TBD'}</span>
 
           ${
-            isHost && !tournamentState.group_locked
+            isHost && !tournamentState.super8_locked
               ? `<input class="score-input" type="number" min="0"
                    value="${m.s1 ?? ''}"
                    onchange="updateMatch(${gi}, ${idx}, 1, this.value)">
