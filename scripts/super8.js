@@ -209,20 +209,20 @@ async function updateS8Teams() {
   // Assign to Super 8
   s8Data = [
     {
-      name: 'Super 8 Group A',
+      name: 'Super 8 Group 1',
       teams: [
-        g1[0],
+        g1[1],
         g2[1],
         g3[0],
-        g4[1]
+        g4[0]
       ]
     },
     {
-      name: 'Super 8 Group B',
+      name: 'Super 8 Group 2',
       teams: [
         g2[0],
-        g1[1],
-        g4[0],
+        g1[0],
+        g4[1],
         g3[1]
       ]
     }
